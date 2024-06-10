@@ -2,6 +2,89 @@ package com.example.reproductorv10
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: SongAdapter
+    private lateinit var mediaPlayer: MediaPlayer
+
+    private val songs: List<Song> by lazy {
+        generateSongList()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        recyclerView = findViewById(R.id.recyclerView)
+        adapter = SongAdapter(songs)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        mediaPlayer = MediaPlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
+
+    private fun generateSongList(): List<Song> {
+        val songList = mutableListOf<Song>()
+        val fileNames = arrayOf(
+            "bnet_vs_errece_leyendas",
+            "duki__papo",
+            "duki_rusher_litkillah",
+            "duki_vs_crow",
+            "lit_killah__alfa",
+            "lit_killah__ash",
+            "lit_killah__manteca",
+            "lit_killah_fmk__la_vi",
+            "metalingustica_vs_teorema",
+            "papo__fundacion",
+            "papo__vegano",
+            "replik__artistas",
+            "replik_vs_cacha",
+            "replik_vs_nacho",
+            "replik_vs_papo__gordo_forro",
+            "rip_la_mashon",
+            "trueno__presentacion",
+            "trueno_vs_nacho",
+            "wos__la_sexualidad_del_boludo",
+            "wos_vs_klan",
+            "zasko__ex",
+            "zasko_vs_gazir",
+            "zticma_vs_kaiser"
+        )
+
+        for (fileName in fileNames) {
+            val title = fileName.replace("_", " ")
+            val resourceId = getResourceId(fileName)
+            if (resourceId != 0) {
+                songList.add(Song(title, resourceId))
+            } else {
+                Log.e("MainActivity", "Resource not found for file: $fileName")
+            }
+        }
+
+        return songList
+    }
+
+    private fun getResourceId(fileName: String): Int {
+        return resources.getIdentifier(fileName, "raw", packageName)
+    }
+}
+
+/*
+package com.example.reproductorv10
+
+import android.media.MediaPlayer
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -76,3 +159,5 @@ class MainActivity : AppCompatActivity() {
         return resources.getIdentifier(fileName, "raw", packageName)
     }
 }
+
+ */
